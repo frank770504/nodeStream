@@ -1,5 +1,5 @@
 //--
-var nxserver = new NXServer('/home/gerald/prog/nodeStream', 8080, '127.0.0.1', 1234);
+var nxserver = new NXServer('/Users/frankchen/Code/nodeStream', 8080, '192.168.1.121', 5678);
 
 // --
 // start node server
@@ -15,7 +15,7 @@ function NXServer(httpUIDir, httpPort, streamIP, streamPort) {
 		serveStatic = require('serve-static'),
 		//app = connect().use(connect(this.httpUIDir)).listen(this.httpPort),   //running from http://
 		app = connect().use(serveStatic(this.httpUIDir)).listen(this.httpPort),    //running from file:///
-		io = require('socket.io').listen(app);
+		io = require('socket.io')(app);
 
 	console.log("http server on "+this.httpPort);
 	console.log("running on "+this.httpUIDir);
@@ -34,24 +34,6 @@ function NXServer(httpUIDir, httpPort, streamIP, streamPort) {
 		"pipe:1"
 		]);
 
-	// way for windows?
-	//  var ffmpeg = require('child_process').spawn("ffmpeg", [
-	//    "-y", 
-	// "-threads",
-	// "4",
-	//    "-i", 
-	//    "udp://"+this.streamIP+":"+this.streamPort, 
-	// "-preset", 
-	//    "ultrafast", 
-	// "-bufsize",
-	// "702000k",
-	// "-vcodec",
-	// "copy",
-	//    "-f", 
-	//    "mpjpeg", 
-	//    "pipe:1"
-	//  ]);
-	// vcd
 	ffmpeg.on('error', function (err) {
 		throw err;
 	});
@@ -81,7 +63,7 @@ function NXServer(httpUIDir, httpPort, streamIP, streamPort) {
 		// 		io.sockets.emit('canvas',frame);
 		// });
 
-		var frame = new Buffer(data).toString('base64');
-		io.sockets.emit('canvas',frame);
+		var frame = new Buffer.from(data).toString('base64');
+		io.sockets.emit('canvas', frame);
 	});
 }

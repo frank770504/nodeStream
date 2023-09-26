@@ -1,7 +1,7 @@
 
 var connect = null;
 
-$(document).bind('ready', function () {
+$(document).ready(function () {
 	console.log("streamClient ready!");	
 	connect = new Connect('127.0.0.1',8080);
 	connect.initSocket();
